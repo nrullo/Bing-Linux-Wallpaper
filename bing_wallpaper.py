@@ -6,7 +6,7 @@ import gtk, helper, service, os, signal
 from multiprocessing import Process, Queue,freeze_support
 import gobject
 
-import threading 
+import threading
 import time
 from os.path import expanduser
 import getpass, sys
@@ -42,7 +42,7 @@ def random_wallpaper(data= None):
 def set_timer( minutes ):
 
   global config,count_milliseconds
-  
+
   temp_milliseconds = minutes * 60 * 1000
 
   if temp_milliseconds != config['timer_milliseconds']:
@@ -97,14 +97,14 @@ def seperate_menu_item():
 def create_image_menu( label, image_path ):
   img = gtk.Image()
   img.set_from_file( helper.icon_path( image_path ) )
-  
+
   menu_item = gtk.ImageMenuItem( label )
   menu_item.set_image(img)
   menu_item.set_always_show_image(True)
 
   return menu_item
-  
-  
+
+
 
 def make_menu(event_button = None, event_time = None, data=None):
   global config, is_dowloading_wallpapers, all_modes
@@ -125,15 +125,15 @@ def make_menu(event_button = None, event_time = None, data=None):
   select_timer_item.set_submenu( sub_menu)
   select_timer_item.show()
 
-  for timer in [1,2,5,10,30,60]:
-    
+  for timer in [1,2,5,10,30,60,1440]:
+
     menu_string =  helper.string_label( timer, 'minute' )
 
     if timer * 60 * 1000 == config['timer_milliseconds']:
       menu_item = create_image_menu( menu_string, 'circle_active.png' )
     else:
       menu_item = create_image_menu( menu_string, 'circle_deactive.png' )
-    
+
     sub_menu.append(menu_item)
 
     menu_item.connect_object("activate", set_timer, timer)
@@ -191,18 +191,18 @@ def make_menu(event_button = None, event_time = None, data=None):
   if is_dowloading_wallpapers is False:
 
     refresh_item = create_image_menu( "Force Refresh", 'refresh.png' )
-    
+
     menu.append(refresh_item)
 
     refresh_item.connect_object("activate", refresh_weekly_wallpaper, "refresh")
     refresh_item.show()
 
     menu.append( seperate_menu_item() )
-  
+
 
   close_item = create_image_menu( "Quit", 'shutdown.png' )
   menu.append(close_item)
-  
+
   close_item.connect_object("activate", gtk.main_quit,[])
   close_item.show()
   #End quit item
@@ -240,7 +240,7 @@ def watch():
 
   if q.empty():
     return True
-  
+
 
   message = q.get()
 
@@ -260,7 +260,7 @@ def watch():
     is_dowloading_wallpapers = False
     refresh_menu()
     kill_child( )
-  
+
   return True
 
 if __name__ == '__main__':
@@ -298,7 +298,7 @@ if __name__ == '__main__':
     helper.notify("You disabled automatic download newest wallpapers")
 
   gobject.timeout_add(watch_milliseconds, watch)
-  
+
   gobject.threads_init()
 
   tray_app = appindicator.Indicator('bing_indicator', helper.icon_path('Bing_Icon.png') , appindicator.CATEGORY_APPLICATION_STATUS)
