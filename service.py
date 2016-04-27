@@ -49,14 +49,14 @@ def random_wallpaper( curr_wallpaper, wallpapers_folder, date_ranges):
   from os.path import isfile, join
   from random import randrange
 
-  
+
   wallpaper_files = [ f for f in listdir(wallpapers_folder) if isfile(join(wallpapers_folder,f)) and is_valid(f, date_ranges) ]
 
   count_wallpapers = len(wallpaper_files)
-  
+
   if count_wallpapers > 0:
-    choose_wallper =wallpaper_files[ randrange( count_wallpapers ) ] 
-    
+    choose_wallper =wallpaper_files[ randrange( count_wallpapers ) ]
+
 
     if choose_wallper == curr_wallpaper and count_wallpapers > 1:
       #Rescursive again because it's using the same wallpaper
@@ -64,7 +64,7 @@ def random_wallpaper( curr_wallpaper, wallpapers_folder, date_ranges):
       return random_wallpaper( curr_wallpaper, wallpapers_folder, date_ranges)
     else:
       set_wallpaper( os.path.join( wallpapers_folder, choose_wallper ) )
-      helper.notify("Your wallpaper is set from " + choose_wallper)
+      # helper.notify("Your wallpaper is set from " + choose_wallper)
 
       return choose_wallper
 
@@ -83,7 +83,7 @@ def get_weekly_wallpapers(wallpapers_folder, q, is_force = False):
   q.put( create_queue_obj('child_pid',os.getpid() ) )
 
   if not os.path.exists(wallpapers_folder):
-    os.makedirs(wallpapers_folder)  
+    os.makedirs(wallpapers_folder)
 
   helper.notify("Getting weekly wallpapers")
 
@@ -91,7 +91,7 @@ def get_weekly_wallpapers(wallpapers_folder, q, is_force = False):
 
     #r = requests.get( weekly_wallpapers_url )
     r = urllib2.urlopen( weekly_wallpapers_url )
-  
+
     helper.notify("Downloading all newest wallpapers to your computer")
 
     weekly_wallpapers =  json.load(r)['images']
@@ -99,12 +99,12 @@ def get_weekly_wallpapers(wallpapers_folder, q, is_force = False):
     print "There are %s wallpapers on the feed" % (len(weekly_wallpapers))
 
     for wallpaper in weekly_wallpapers:
-      
+
       download_url =  wallpaper['url']
 
       if home_site not in download_url:
         download_url = home_site + download_url
-      
+
       file_name = wallpaper['startdate'] + "_" + ntpath.basename( wallpaper['url'])
 
       #temp_path = os.path.join('/tmp', file_name )
